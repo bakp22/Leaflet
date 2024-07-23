@@ -67,12 +67,16 @@ export const Circle = CircleMarker.extend({
 
 	_project() {
 
+		console.log('HI');
+
 		const lng = this._latlng.lng,
 		    lat = this._latlng.lat,
 		    map = this._map,
 		    crs = map.options.crs;
 
 		if (crs.distance === Earth.distance) {
+			console.log('yes');
+
 			const d = Math.PI / 180,
 			      latR = (this._mRadius / Earth.R) / d,
 			      top = map.project([lat + latR, lng]),
@@ -91,10 +95,13 @@ export const Circle = CircleMarker.extend({
 			this._radiusY = p.y - top.y;
 
 		} else {
+
 			const latlng2 = crs.unproject(crs.project(this._latlng).subtract([this._mRadius, 0]));
 
 			this._point = map.latLngToLayerPoint(this._latlng);
-			this._radius = this._point.x - map.latLngToLayerPoint(latlng2).x;
+
+			this._radius = Math.abs(this._point.x - map.latLngToLayerPoint(latlng2).x);
+
 		}
 
 		this._updateBounds();
